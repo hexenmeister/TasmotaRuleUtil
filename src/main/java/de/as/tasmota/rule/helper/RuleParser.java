@@ -5,14 +5,13 @@ import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Objects;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 public class RuleParser {
 
     // private static String reComparison = "(=|==|>|<|!=|>=|<=|\\|)";
 
-    static abstract class Part {
+    public static abstract class Part {
 	protected List<Part> children;
 
 	protected Part() {
@@ -101,6 +100,10 @@ public class RuleParser {
 	    return this.unparsed;
 	}
 
+	public String getUnparsedText() {
+	    return this.getUnparsed().stream().collect(Collectors.joining());
+	}
+
 	@Override
 	public boolean accept(List<String> in) {
 	    boolean found = false;
@@ -145,7 +148,7 @@ public class RuleParser {
 	}
     }
 
-    static class RuleBlock extends Part {
+    public static class RuleBlock extends Part {
 	private String blockName = "";
 	private String comment = "";
 
@@ -170,7 +173,7 @@ public class RuleParser {
 	    } else {
 		return false;
 	    }
-	    skipSpaces(in);
+	    skipSpaces(in); // TODO: Ändern: nur Leerzeichen, nicht Zeilenumbrüche!
 	    this.comment = searchForLineComment(in);
 	    while (!in.isEmpty() && !newBlock(in)) {
 		found = false;
@@ -188,17 +191,29 @@ public class RuleParser {
 		    skipSpaces(in);
 		}
 	    }
-	    return found;
+	    return true; // return found;
 	}
 
 	@Override
 	public String write() {
-	    return "\r\n[" + this.blockName + "]\r\n" + this.writeChildren();
+	    return write(true);
+	}
+
+	public String write(boolean withName) {
+	    return (withName ? "\r\n[" + this.blockName + "]\r\n" : "") + this.writeChildren();
 	}
 
 	public String writeFormatedIntern(int indent) {
+	    return writeFormatedIntern(true, indent);
+	}
+
+	public String writeFormatedIntern(boolean withName, int indent) {
 	    String comm = this.comment != null ? " //" + this.comment : "";
-	    return "[" + this.blockName + "]" + comm + "\r\n" + this.writeChildrenFormated(indent);
+	    return (withName ? "[" + this.blockName + "]" : "") + comm + "\r\n" + this.writeChildrenFormated(indent);
+	}
+
+	public String getName() {
+	    return this.blockName;
 	}
     }
 

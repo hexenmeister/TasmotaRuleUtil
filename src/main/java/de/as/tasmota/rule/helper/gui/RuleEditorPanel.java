@@ -65,6 +65,13 @@ public class RuleEditorPanel extends JPanel {
 	    }
 	});
     }
+//
+//    /**
+//     * Nur für den WindowBuilder.
+//     */
+//    public RuleEditorPanel() {
+//	this(null, null);
+//    }
 
     /**
      * Create the panel.
@@ -164,8 +171,7 @@ public class RuleEditorPanel extends JPanel {
 	    public void actionPerformed(ActionEvent e) {
 		int pos = taCodeEditor.getCaretPosition();
 		RuleScript script = RuleParser.parse(model.getEditorText());
-		model.setEditorText(
-			script.writeFormated() + script.getUnparsed().stream().collect(Collectors.joining()));
+		model.setEditorText(script.writeFormated() + script.getUnparsedText());
 		taCodeEditor.setCaretPosition(Math.min(pos, taCodeEditor.getCaretPosition()));
 		taCodeEditor.requestFocusInWindow();
 	    }

@@ -13,6 +13,10 @@ import javax.swing.JPanel;
 import javax.swing.JSplitPane;
 
 import de.as.tasmota.rule.helper.RulePacker;
+import de.as.tasmota.rule.helper.RuleParser;
+import de.as.tasmota.rule.helper.RuleParser.Part;
+import de.as.tasmota.rule.helper.RuleParser.RuleBlock;
+import de.as.tasmota.rule.helper.RuleParser.RuleScript;
 import de.as.tasmota.rule.helper.gui.utils.TextEvent;
 import de.as.tasmota.rule.helper.model.RuleEditorModel;
 
@@ -88,10 +92,38 @@ public class TasmotaRuleHelperGui {
 	this.ruleEditor = new RuleEditorPanel(model, new TextEvent() {
 	    @Override
 	    public void textReceived(String text) {
+		RuleScript script = RuleParser.parse(text);
+		String r1 = "";
+		String r2 = "";
+		String r3 = "";
+		boolean found = false;
+		for (Part part : script.getChildren()) {
+		    if (part instanceof RuleBlock) {
+			found = true;
+			if (((RuleBlock) part).getName().equalsIgnoreCase("rule1")) {
+			    r1 = ((RuleBlock) part).write(false);
+			}
+			if (((RuleBlock) part).getName().equalsIgnoreCase("rule2")) {
+			    r2 = ((RuleBlock) part).write(false);
+			}
+			if (((RuleBlock) part).getName().equalsIgnoreCase("rule3")) {
+			    r3 = ((RuleBlock) part).write(false);
+			}
+		    }
+		}
+
+		if (!found) {
+		    r1 = script.write();
+		}
+
 		RulePacker packer = new RulePacker();
-		List<String> rpacked = packer.pack(text);
+		List<String> rpacked1 = packer.pack(r1);
+		List<String> rpacked2 = packer.pack(r2);
+		List<String> rpacked3 = packer.pack(r3);
 		// TODO
-		rulePanel1.setText(rpacked.get(0));
+		rulePanel1.setText(rpacked1.get(0));
+		rulePanel2.setText(rpacked2.get(0));
+		rulePanel3.setText(rpacked3.get(0));
 	    }
 	});
 	this.spMain.setLeftComponent(this.ruleEditor);
