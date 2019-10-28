@@ -31,10 +31,10 @@ import javax.swing.undo.CannotRedoException;
 import javax.swing.undo.CannotUndoException;
 import javax.swing.undo.UndoManager;
 
-import de.as.tasmota.rule.helper.RulePacker;
-import de.as.tasmota.rule.helper.RuleParser;
-import de.as.tasmota.rule.helper.RuleParser.RuleScript;
 import de.as.tasmota.rule.helper.gui.utils.TextEvent;
+import de.as.tasmota.rule.helper.logic.formatter.RulePacker;
+import de.as.tasmota.rule.helper.logic.formatter.RuleParser;
+import de.as.tasmota.rule.helper.logic.formatter.RuleParser.RuleScript;
 import de.as.tasmota.rule.helper.model.ModelBase.ValueBridge;
 import de.as.tasmota.rule.helper.model.RuleEditorModel;
 

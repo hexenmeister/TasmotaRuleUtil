@@ -1,19 +1,13 @@
 package de.as.tasmota.rule.helper.model;
 
-public class OptionsHttpModel extends ModelBase {
+public class OptionsHttpModel extends ModelBase<RuleEditorModel> {
 
     public static final String KEY_OPT_IP = "optIP:text";
     public static final String KEY_OPT_USER = "optUser:text";
     public static final String KEY_OPT_PASS = "optPass:text";
 
-    private RuleEditorModel root;
-
     public OptionsHttpModel(RuleEditorModel root) {
-	this.root = root;
-    }
-
-    public RuleEditorModel getRoot() {
-	return this.root;
+	super(root);
     }
 
     public String getOptIp() {

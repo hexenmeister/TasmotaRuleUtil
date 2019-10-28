@@ -1,6 +1,6 @@
 package de.as.tasmota.rule.helper.model;
 
-public class RuleEditorModel extends ModelBase {
+public class RuleEditorModel extends ModelBase<RuleEditorModel> {
 
     public static final String KEY_RULEEDITOR_TEXT = "ruleEditor:text";
 
@@ -9,14 +9,8 @@ public class RuleEditorModel extends ModelBase {
     private DevRuleModel devRuleModel3 = new DevRuleModel(this, "Rule3");
     private OptionsHttpModel optionsHttpModel = new OptionsHttpModel(this);
 
-    private RuleEditorModel root;
-
     public RuleEditorModel() {
-	this.root = this;
-    }
-
-    public RuleEditorModel getRoot() {
-	return this.root;
+	super(null);
     }
 
     public DevRuleModel getDevRuleModel1() {

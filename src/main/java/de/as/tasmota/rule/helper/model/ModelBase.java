@@ -3,9 +3,23 @@ package de.as.tasmota.rule.helper.model;
 import java.util.HashMap;
 import java.util.Map;
 
-public class ModelBase {
+public class ModelBase<M extends ModelBase<?>> {
+
+    private M root;
 
     private Map<String, ValueBridge<?>> map = new HashMap<>();
+
+    protected ModelBase(M root) {
+	this.root = root;
+    }
+
+    @SuppressWarnings("unchecked")
+    public M getRoot() {
+	if (this.root == null) {
+	    return (M) this;
+	}
+	return this.root;
+    }
 
     public static abstract class ValueBridge<T> {
 	public abstract T getValue();

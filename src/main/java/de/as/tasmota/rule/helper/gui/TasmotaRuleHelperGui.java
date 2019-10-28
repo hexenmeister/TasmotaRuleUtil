@@ -2,7 +2,6 @@
 package de.as.tasmota.rule.helper.gui;
 
 import java.awt.BorderLayout;
-import java.awt.EventQueue;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
@@ -12,12 +11,12 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JSplitPane;
 
-import de.as.tasmota.rule.helper.RulePacker;
-import de.as.tasmota.rule.helper.RuleParser;
-import de.as.tasmota.rule.helper.RuleParser.Part;
-import de.as.tasmota.rule.helper.RuleParser.RuleBlock;
-import de.as.tasmota.rule.helper.RuleParser.RuleScript;
 import de.as.tasmota.rule.helper.gui.utils.TextEvent;
+import de.as.tasmota.rule.helper.logic.formatter.RulePacker;
+import de.as.tasmota.rule.helper.logic.formatter.RuleParser;
+import de.as.tasmota.rule.helper.logic.formatter.RuleParser.Part;
+import de.as.tasmota.rule.helper.logic.formatter.RuleParser.RuleBlock;
+import de.as.tasmota.rule.helper.logic.formatter.RuleParser.RuleScript;
 import de.as.tasmota.rule.helper.model.RuleEditorModel;
 
 public class TasmotaRuleHelperGui {
@@ -40,24 +39,24 @@ public class TasmotaRuleHelperGui {
 //    private JTextField tfPass;
 //    private JButton btnLoadAll;
 
-    /**
-     * Launch the application.
-     */
-    public static void main(String[] args) {
-	EventQueue.invokeLater(new Runnable() {
-	    public void run() {
-		try {
-		    RuleEditorModel model = new RuleEditorModel();
-		    TasmotaRuleHelperGui window = new TasmotaRuleHelperGui(model);
-		    window.frame.setSize(1000, 750);
-//		    window.frame.pack();
-		    window.frame.setVisible(true);
-		} catch (Exception e) {
-		    e.printStackTrace();
-		}
-	    }
-	});
-    }
+//    /**
+//     * Launch the application.
+//     */
+//    public static void main(String[] args) {
+//	EventQueue.invokeLater(new Runnable() {
+//	    public void run() {
+//		try {
+//		    RuleEditorModel model = new RuleEditorModel();
+//		    TasmotaRuleHelperGui window = new TasmotaRuleHelperGui(model);
+//		    window.frame.setSize(1000, 750);
+////		    window.frame.pack();
+//		    window.frame.setVisible(true);
+//		} catch (Exception e) {
+//		    e.printStackTrace();
+//		}
+//	    }
+//	});
+//    }
 
     /**
      * Create the application.
@@ -65,6 +64,12 @@ public class TasmotaRuleHelperGui {
     public TasmotaRuleHelperGui(RuleEditorModel model) {
 	initialize(model);
 	initModel(model);
+    }
+
+    public void show() {
+	this.frame.setSize(1000, 750);
+	// this.frame.pack();
+	this.frame.setVisible(true);
     }
 
     private void initModel(RuleEditorModel model) {
