@@ -1,4 +1,4 @@
-package de.as.tasmota.rule.helper;
+package de.as.tasmota.rule.helper.logic.formatter;
 
 import java.util.ArrayList;
 import java.util.Arrays;
