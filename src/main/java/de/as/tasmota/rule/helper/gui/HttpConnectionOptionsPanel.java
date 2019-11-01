@@ -11,6 +11,7 @@ import javax.swing.JPanel;
 import javax.swing.JTextField;
 
 import de.as.tasmota.rule.helper.model.ModelBase.ValueBridge;
+import de.as.tasmota.rule.helper.controller.OptionsHttpController;
 import de.as.tasmota.rule.helper.model.OptionsHttpModel;
 
 public class HttpConnectionOptionsPanel extends JPanel {
@@ -22,9 +23,9 @@ public class HttpConnectionOptionsPanel extends JPanel {
     /**
      * Create the panel.
      */
-    public HttpConnectionOptionsPanel(OptionsHttpModel model) {
-	initialize(model);
-	initModel(model);
+    public HttpConnectionOptionsPanel(OptionsHttpController controller) {
+	initialize(controller);
+	initModel(controller.getModel());
     }
 
     private void initModel(OptionsHttpModel model) {
@@ -66,7 +67,7 @@ public class HttpConnectionOptionsPanel extends JPanel {
 	});
     }
 
-    private void initialize(OptionsHttpModel model) {
+    private void initialize(OptionsHttpController controller) {
 	GridBagLayout gbl_pTasmotaOptions = new GridBagLayout();
 	gbl_pTasmotaOptions.rowHeights = new int[] { 22, 22, 0, 0 };
 	gbl_pTasmotaOptions.columnWeights = new double[] { 0.0, 0.0, 0.0, 0.0, 0.0 };

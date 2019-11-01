@@ -9,7 +9,6 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.InputEvent;
 import java.awt.event.KeyEvent;
-import java.util.stream.Collectors;
 
 import javax.swing.AbstractAction;
 import javax.swing.Action;
@@ -26,13 +25,15 @@ import javax.swing.event.DocumentEvent.EventType;
 import javax.swing.event.DocumentListener;
 import javax.swing.event.UndoableEditEvent;
 import javax.swing.event.UndoableEditListener;
+import javax.swing.text.BadLocationException;
+import javax.swing.text.DefaultStyledDocument;
 import javax.swing.text.Document;
 import javax.swing.undo.CannotRedoException;
 import javax.swing.undo.CannotUndoException;
 import javax.swing.undo.UndoManager;
 
+import de.as.tasmota.rule.helper.controller.RuleEditorController;
 import de.as.tasmota.rule.helper.gui.utils.TextEvent;
-import de.as.tasmota.rule.helper.logic.formatter.RulePacker;
 import de.as.tasmota.rule.helper.logic.formatter.RuleParser;
 import de.as.tasmota.rule.helper.logic.formatter.RuleParser.RuleScript;
 import de.as.tasmota.rule.helper.model.ModelBase.ValueBridge;
@@ -40,7 +41,7 @@ import de.as.tasmota.rule.helper.model.RuleEditorModel;
 
 public class RuleEditorPanel extends JPanel {
 
-    private RuleEditorModel model;
+    private RuleEditorController controller;
 
     private JTextPane taCodeEditor;
     private TextEvent transformEvent;
@@ -76,12 +77,12 @@ public class RuleEditorPanel extends JPanel {
     /**
      * Create the panel.
      */
-    public RuleEditorPanel(RuleEditorModel model, TextEvent transformEvent) {
+    public RuleEditorPanel(RuleEditorController controller, TextEvent transformEvent) {
 	this.transformEvent = transformEvent;
-	this.model = model;
+	this.controller = controller;
 	setLayout(new BorderLayout(0, 0));
-	initialize(model);
-	initModel(model);
+	initialize(controller);
+	initModel(controller.getModel());
 
 	// undo and redo (s.https://alvinalexander.com/java/java-undo-redo)
 	editorPaneDocument = taCodeEditor.getDocument();
@@ -114,7 +115,7 @@ public class RuleEditorPanel extends JPanel {
 	    }
 	});
 
-	model.addBridge(RuleEditorModel.KEY_RULEEDITOR_TEXT, new ValueBridge<String>() {
+	controller.getModel().addBridge(RuleEditorModel.KEY_RULEEDITOR_TEXT, new ValueBridge<String>() {
 
 	    @Override
 	    public String getValue() {
@@ -128,7 +129,7 @@ public class RuleEditorPanel extends JPanel {
 	});
     }
 
-    private void initialize(RuleEditorModel model) {
+    private void initialize(RuleEditorController controller) {
 	JScrollPane spCe = new JScrollPane();
 	this.add(spCe, BorderLayout.CENTER);
 
@@ -170,8 +171,8 @@ public class RuleEditorPanel extends JPanel {
 	bFormat.addActionListener(new ActionListener() {
 	    public void actionPerformed(ActionEvent e) {
 		int pos = taCodeEditor.getCaretPosition();
-		RuleScript script = RuleParser.parse(model.getEditorText());
-		model.setEditorText(script.writeFormated() + script.getUnparsedText());
+		RuleScript script = RuleParser.parse(controller.getModel().getEditorText());
+		controller.getModel().setEditorText(script.writeFormated() + script.getUnparsedText());
 		taCodeEditor.setCaretPosition(Math.min(pos, taCodeEditor.getCaretPosition()));
 		taCodeEditor.requestFocusInWindow();
 	    }
@@ -241,6 +242,15 @@ public class RuleEditorPanel extends JPanel {
 
 	    undoAction.update();
 	    redoAction.update();
+
+//	    // TODO: Test only! Bessere Stelle finden!
+//	    try {
+//		DefaultStyledDocument doc = (DefaultStyledDocument)taCodeEditor.getDocument();
+//		(new RuleDocumentAtributesProcessor()).applyStyleAttributes(doc, 0, taCodeEditor.getText());
+//	    } catch (BadLocationException e1) {
+//		// TODO Auto-generated catch block
+//		e1.printStackTrace();
+//	    }
 //	    }
 	}
     }

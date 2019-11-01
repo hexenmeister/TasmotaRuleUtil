@@ -11,6 +11,7 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JSplitPane;
 
+import de.as.tasmota.rule.helper.controller.RuleEditorController;
 import de.as.tasmota.rule.helper.gui.utils.TextEvent;
 import de.as.tasmota.rule.helper.logic.formatter.RulePacker;
 import de.as.tasmota.rule.helper.logic.formatter.RuleParser;
@@ -21,7 +22,7 @@ import de.as.tasmota.rule.helper.model.RuleEditorModel;
 
 public class TasmotaRuleHelperGui {
 
-    private RuleEditorModel model;
+    private RuleEditorController controller;
     private JFrame frame;
     private JSplitPane spMain;
     private JPanel pDevice;
@@ -61,9 +62,9 @@ public class TasmotaRuleHelperGui {
     /**
      * Create the application.
      */
-    public TasmotaRuleHelperGui(RuleEditorModel model) {
-	initialize(model);
-	initModel(model);
+    public TasmotaRuleHelperGui(RuleEditorController controller) {
+	initialize(controller);
+	initModel(controller.getModel());
     }
 
     public void show() {
@@ -79,8 +80,8 @@ public class TasmotaRuleHelperGui {
     /**
      * Initialize the contents of the frame.
      */
-    private void initialize(RuleEditorModel model) {
-	this.model = model;
+    private void initialize(RuleEditorController controller) {
+	this.controller= controller;
 	// Frame
 	this.frame = new JFrame();
 	this.frame.setTitle("Tasmota Rule Util");
@@ -94,7 +95,7 @@ public class TasmotaRuleHelperGui {
 	this.pDevice = new JPanel();
 	this.spMain.setRightComponent(this.pDevice);
 
-	this.ruleEditor = new RuleEditorPanel(model, new TextEvent() {
+	this.ruleEditor = new RuleEditorPanel(controller, new TextEvent() {
 	    @Override
 	    public void textReceived(String text) {
 		RuleScript script = RuleParser.parse(text);
@@ -142,7 +143,7 @@ public class TasmotaRuleHelperGui {
 	pDevice.setLayout(gbl_pDevice);
 
 	// Options pane
-	pTasmotaOptions = new HttpConnectionOptionsPanel(model.getOptionsHttpModel());
+	pTasmotaOptions = new HttpConnectionOptionsPanel(controller.getOptionsHttpController());
 	GridBagConstraints gbc_pTasmotaOptions = new GridBagConstraints();
 	gbc_pTasmotaOptions.fill = GridBagConstraints.BOTH;
 	gbc_pTasmotaOptions.weightx = 1.0;
@@ -152,7 +153,7 @@ public class TasmotaRuleHelperGui {
 	pDevice.add(pTasmotaOptions, gbc_pTasmotaOptions);
 
 	// Rule panels
-	rulePanel1 = new DevRulePanel(model.getDevRuleModel1());
+	rulePanel1 = new DevRulePanel(controller.getDevRuleController1());
 	GridBagConstraints gbc_spCc1 = new GridBagConstraints();
 	gbc_spCc1.weighty = 1.0;
 	gbc_spCc1.weightx = 1.0;
@@ -162,7 +163,7 @@ public class TasmotaRuleHelperGui {
 	gbc_spCc1.gridy = 1;
 	this.pDevice.add(rulePanel1, gbc_spCc1);
 
-	rulePanel2 = new DevRulePanel(model.getDevRuleModel2());
+	rulePanel2 = new DevRulePanel(controller.getDevRuleController2());
 	GridBagConstraints gbc_spCc2 = new GridBagConstraints();
 	gbc_spCc2.weighty = 1.0;
 	gbc_spCc2.weightx = 1.0;
@@ -172,7 +173,7 @@ public class TasmotaRuleHelperGui {
 	gbc_spCc2.gridy = 2;
 	this.pDevice.add(this.rulePanel2, gbc_spCc2);
 
-	rulePanel3 = new DevRulePanel(model.getDevRuleModel3());
+	rulePanel3 = new DevRulePanel(controller.getDevRuleController3());
 	GridBagConstraints gbc_spCc3 = new GridBagConstraints();
 	gbc_spCc3.weighty = 1.0;
 	gbc_spCc3.weightx = 1.0;

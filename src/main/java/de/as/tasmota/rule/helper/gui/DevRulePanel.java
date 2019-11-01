@@ -13,6 +13,7 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 
+import de.as.tasmota.rule.helper.controller.DevRuleController;
 import de.as.tasmota.rule.helper.model.DevRuleModel;
 import de.as.tasmota.rule.helper.model.ModelBase.ValueBridge;
 
@@ -20,11 +21,11 @@ public class DevRulePanel extends JPanel {
 
     private JTextArea taRule;
 
-    public DevRulePanel(DevRuleModel model) {
+    public DevRulePanel(DevRuleController controller) {
 	// this.transformEvent = transformEvent;
 	setLayout(new BorderLayout(0, 0));
-	initialize(model);
-	initModel(model);
+	initialize(controller);
+	initModel(controller.getModel());
     }
 
     private void initModel(DevRuleModel model) {
@@ -51,7 +52,7 @@ public class DevRulePanel extends JPanel {
 	return taRule.getText();
     }
 
-    private void initialize(DevRuleModel model) {
+    private void initialize(DevRuleController controller) {
 	JScrollPane sp1 = new JScrollPane();
 	this.add(sp1, BorderLayout.CENTER);
 
@@ -80,7 +81,7 @@ public class DevRulePanel extends JPanel {
 	gbl_pO.rowWeights = new double[] { 0.0, Double.MIN_VALUE };
 	pO.setLayout(gbl_pO);
 
-	JLabel lName = new JLabel(model.getLabel());
+	JLabel lName = new JLabel(controller.getModel().getLabel());
 	lName.setFont(new Font("Tahoma", Font.BOLD, 11));
 	pO.add(lName, new GridBagConstraints(0, 0, 1, 1, 0.0, 0.0, GridBagConstraints.WEST,
 		GridBagConstraints.HORIZONTAL, new Insets(3, 7, 3, 7), 0, 0));

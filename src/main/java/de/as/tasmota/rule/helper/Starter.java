@@ -2,8 +2,8 @@ package de.as.tasmota.rule.helper;
 
 import java.awt.EventQueue;
 
+import de.as.tasmota.rule.helper.controller.RuleEditorController;
 import de.as.tasmota.rule.helper.gui.TasmotaRuleHelperGui;
-import de.as.tasmota.rule.helper.model.RuleEditorModel;
 
 public class Starter {
 
@@ -14,8 +14,9 @@ public class Starter {
 	EventQueue.invokeLater(new Runnable() {
 	    public void run() {
 		try {
-		    RuleEditorModel model = new RuleEditorModel();
-		    TasmotaRuleHelperGui window = new TasmotaRuleHelperGui(model);
+//		    RuleEditorModel model = new RuleEditorModel();
+		    RuleEditorController controller = new RuleEditorController();
+		    TasmotaRuleHelperGui window = new TasmotaRuleHelperGui(controller);
 		    window.show();
 		} catch (Exception e) {
 		    e.printStackTrace();
