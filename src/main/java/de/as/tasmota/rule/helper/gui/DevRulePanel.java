@@ -21,6 +21,8 @@ import java.awt.event.ActionEvent;
 
 public class DevRulePanel extends JPanel {
 
+    private static final long serialVersionUID = -3879865029886567323L;
+    
     private JTextArea taRule;
     private JLabel lSettings;
 

@@ -15,6 +15,8 @@ import de.as.tasmota.rule.helper.gui.RuleEditorPanel.UndoHandler;
 
 public class RuleDocument extends DefaultStyledDocument {
 
+    private static final long serialVersionUID = -6901431194977629369L;
+
     private Map<String, SimpleAttributeSet> keywordSets = new HashMap<String, SimpleAttributeSet>();
 
     private SimpleAttributeSet bold = new SimpleAttributeSet();

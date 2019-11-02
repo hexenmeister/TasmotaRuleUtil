@@ -5,24 +5,18 @@ import java.awt.BorderLayout;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
-import java.util.List;
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JSplitPane;
 
-import de.as.tasmota.backup.TextEvent;
 import de.as.tasmota.rule.helper.controller.RuleEditorController;
-import de.as.tasmota.rule.helper.logic.formatter.RulePacker;
-import de.as.tasmota.rule.helper.logic.formatter.RuleParser;
-import de.as.tasmota.rule.helper.logic.formatter.RuleParser.Part;
-import de.as.tasmota.rule.helper.logic.formatter.RuleParser.RuleBlock;
-import de.as.tasmota.rule.helper.logic.formatter.RuleParser.RuleScript;
 import de.as.tasmota.rule.helper.model.RuleEditorModel;
 
 public class TasmotaRuleHelperGui {
 
-    private RuleEditorController controller;
+//    private RuleEditorController controller;
+
     private JFrame frame;
     private JSplitPane spMain;
     private JPanel pDevice;
@@ -81,7 +75,7 @@ public class TasmotaRuleHelperGui {
      * Initialize the contents of the frame.
      */
     private void initialize(RuleEditorController controller) {
-	this.controller= controller;
+//	this.controller= controller;
 	// Frame
 	this.frame = new JFrame();
 	this.frame.setTitle("Tasmota Rule Util");
@@ -95,43 +89,28 @@ public class TasmotaRuleHelperGui {
 	this.pDevice = new JPanel();
 	this.spMain.setRightComponent(this.pDevice);
 
-	this.ruleEditor = new RuleEditorPanel(controller/*, new TextEvent() {
-	    @Override
-	    public void textReceived(String text) {
-		RuleScript script = RuleParser.parse(text);
-		String r1 = "";
-		String r2 = "";
-		String r3 = "";
-		boolean found = false;
-		for (Part part : script.getChildren()) {
-		    if (part instanceof RuleBlock) {
-			found = true;
-			if (((RuleBlock) part).getName().equalsIgnoreCase("rule1")) {
-			    r1 = ((RuleBlock) part).write(false);
-			}
-			if (((RuleBlock) part).getName().equalsIgnoreCase("rule2")) {
-			    r2 = ((RuleBlock) part).write(false);
-			}
-			if (((RuleBlock) part).getName().equalsIgnoreCase("rule3")) {
-			    r3 = ((RuleBlock) part).write(false);
-			}
-		    }
-		}
-
-		if (!found) {
-		    r1 = script.write();
-		}
-
-		RulePacker packer = new RulePacker();
-		List<String> rpacked1 = packer.pack(r1);
-		List<String> rpacked2 = packer.pack(r2);
-		List<String> rpacked3 = packer.pack(r3);
-		// TODO
-		rulePanel1.setText(rpacked1.get(0));
-		rulePanel2.setText(rpacked2.get(0));
-		rulePanel3.setText(rpacked3.get(0));
-	    }
-	}*/);
+	this.ruleEditor = new RuleEditorPanel(
+		controller/*
+			   * , new TextEvent() {
+			   * 
+			   * @Override public void textReceived(String text) { RuleScript script =
+			   * RuleParser.parse(text); String r1 = ""; String r2 = ""; String r3 = "";
+			   * boolean found = false; for (Part part : script.getChildren()) { if (part
+			   * instanceof RuleBlock) { found = true; if (((RuleBlock)
+			   * part).getName().equalsIgnoreCase("rule1")) { r1 = ((RuleBlock)
+			   * part).write(false); } if (((RuleBlock)
+			   * part).getName().equalsIgnoreCase("rule2")) { r2 = ((RuleBlock)
+			   * part).write(false); } if (((RuleBlock)
+			   * part).getName().equalsIgnoreCase("rule3")) { r3 = ((RuleBlock)
+			   * part).write(false); } } }
+			   * 
+			   * if (!found) { r1 = script.write(); }
+			   * 
+			   * RulePacker packer = new RulePacker(); List<String> rpacked1 =
+			   * packer.pack(r1); List<String> rpacked2 = packer.pack(r2); List<String>
+			   * rpacked3 = packer.pack(r3); // TODO rulePanel1.setText(rpacked1.get(0));
+			   * rulePanel2.setText(rpacked2.get(0)); rulePanel3.setText(rpacked3.get(0)); } }
+			   */);
 	this.spMain.setLeftComponent(this.ruleEditor);
 	this.spMain.setDividerLocation(600);
 

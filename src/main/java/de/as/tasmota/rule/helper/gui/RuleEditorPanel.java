@@ -31,14 +31,14 @@ import javax.swing.undo.CannotUndoException;
 import javax.swing.undo.UndoManager;
 
 import de.as.tasmota.rule.helper.controller.RuleEditorController;
-import de.as.tasmota.rule.helper.logic.formatter.RuleParser;
-import de.as.tasmota.rule.helper.logic.formatter.RuleParser.RuleScript;
 import de.as.tasmota.rule.helper.model.ModelBase.ValueBridge;
 import de.as.tasmota.rule.helper.model.RuleEditorModel;
 
 public class RuleEditorPanel extends JPanel {
 
-    private RuleEditorController controller;
+    private static final long serialVersionUID = 2140071908788902424L;
+
+//    private RuleEditorController controller;
 
     private JTextPane taCodeEditor;
 
@@ -74,7 +74,7 @@ public class RuleEditorPanel extends JPanel {
      * Create the panel.
      */
     public RuleEditorPanel(RuleEditorController controller) {
-	this.controller = controller;
+//	this.controller = controller;
 	setLayout(new BorderLayout(0, 0));
 	initialize(controller);
 	initModel(controller.getModel());
@@ -267,6 +267,9 @@ public class RuleEditorPanel extends JPanel {
     }
 
     class UndoAction extends AbstractAction {
+
+	private static final long serialVersionUID = 2961228002168799581L;
+
 	public UndoAction() {
 	    super("Undo");
 	    setEnabled(false);
@@ -295,6 +298,9 @@ public class RuleEditorPanel extends JPanel {
     }
 
     class RedoAction extends AbstractAction {
+
+	private static final long serialVersionUID = -7402186813147131445L;
+
 	public RedoAction() {
 	    super("Redo");
 	    setEnabled(false);

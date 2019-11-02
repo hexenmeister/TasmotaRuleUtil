@@ -16,6 +16,8 @@ import de.as.tasmota.rule.helper.model.OptionsHttpModel;
 
 public class HttpConnectionOptionsPanel extends JPanel {
 
+    private static final long serialVersionUID = -5740429526128477409L;
+    
     private JTextField tfUrl;
     private JTextField tfPass;
     private JTextField tfUser;
