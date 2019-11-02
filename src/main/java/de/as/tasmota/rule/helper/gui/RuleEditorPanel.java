@@ -25,15 +25,12 @@ import javax.swing.event.DocumentEvent.EventType;
 import javax.swing.event.DocumentListener;
 import javax.swing.event.UndoableEditEvent;
 import javax.swing.event.UndoableEditListener;
-import javax.swing.text.BadLocationException;
-import javax.swing.text.DefaultStyledDocument;
 import javax.swing.text.Document;
 import javax.swing.undo.CannotRedoException;
 import javax.swing.undo.CannotUndoException;
 import javax.swing.undo.UndoManager;
 
 import de.as.tasmota.rule.helper.controller.RuleEditorController;
-import de.as.tasmota.rule.helper.gui.utils.TextEvent;
 import de.as.tasmota.rule.helper.logic.formatter.RuleParser;
 import de.as.tasmota.rule.helper.logic.formatter.RuleParser.RuleScript;
 import de.as.tasmota.rule.helper.model.ModelBase.ValueBridge;
@@ -44,7 +41,6 @@ public class RuleEditorPanel extends JPanel {
     private RuleEditorController controller;
 
     private JTextPane taCodeEditor;
-    private TextEvent transformEvent;
 
     private Document editorPaneDocument;
     protected UndoHandler undoHandler = new UndoHandler();
@@ -77,8 +73,7 @@ public class RuleEditorPanel extends JPanel {
     /**
      * Create the panel.
      */
-    public RuleEditorPanel(RuleEditorController controller, TextEvent transformEvent) {
-	this.transformEvent = transformEvent;
+    public RuleEditorPanel(RuleEditorController controller) {
 	this.controller = controller;
 	setLayout(new BorderLayout(0, 0));
 	initialize(controller);
@@ -157,8 +152,10 @@ public class RuleEditorPanel extends JPanel {
 	bCompile.addActionListener(new ActionListener() {
 	    public void actionPerformed(ActionEvent e) {
 //		RulePacker packer = new RulePacker();
-		String text = taCodeEditor.getText();
-		transformEvent.textReceived(text);
+//		String text = taCodeEditor.getText();
+//		transformEvent.textReceived(text);
+		controller.actionPackCode();
+		taCodeEditor.requestFocusInWindow();
 //		List<String> rpacked = packer.pack(text);
 		// TODO
 		// taCc1.setText(rpacked.get(0));
@@ -171,8 +168,9 @@ public class RuleEditorPanel extends JPanel {
 	bFormat.addActionListener(new ActionListener() {
 	    public void actionPerformed(ActionEvent e) {
 		int pos = taCodeEditor.getCaretPosition();
-		RuleScript script = RuleParser.parse(controller.getModel().getEditorText());
-		controller.getModel().setEditorText(script.writeFormated() + script.getUnparsedText());
+//		RuleScript script = RuleParser.parse(controller.getModel().getEditorText());
+//		controller.getModel().setEditorText(script.writeFormated() + script.getUnparsedText());
+		controller.actionFormatCode();
 		taCodeEditor.setCaretPosition(Math.min(pos, taCodeEditor.getCaretPosition()));
 		taCodeEditor.requestFocusInWindow();
 	    }
@@ -185,6 +183,12 @@ public class RuleEditorPanel extends JPanel {
 	pCe.add(bFormat, gbc_bFormat);
 
 	JButton bLoad = new JButton("Load");
+	bLoad.addActionListener(new ActionListener() {
+	    public void actionPerformed(ActionEvent e) {
+		// TODO
+		controller.actionLoad();
+	    }
+	});
 	GridBagConstraints gbc_bLoad = new GridBagConstraints();
 	gbc_bLoad.insets = new Insets(3, 3, 3, 3);
 	gbc_bLoad.gridx = 1;
@@ -192,6 +196,13 @@ public class RuleEditorPanel extends JPanel {
 	pCe.add(bLoad, gbc_bLoad);
 
 	JButton bSave = new JButton("Save");
+	bSave.addActionListener(new ActionListener() {
+	    public void actionPerformed(ActionEvent e) {
+		// TODO
+		controller.actionSave();
+
+	    }
+	});
 	GridBagConstraints gbc_bSave = new GridBagConstraints();
 	gbc_bSave.insets = new Insets(3, 3, 3, 3);
 	gbc_bSave.gridx = 2;
