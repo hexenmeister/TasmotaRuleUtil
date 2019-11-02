@@ -3,12 +3,13 @@ package de.as.tasmota.rule.helper.model;
 public class DevRuleModel extends ModelBase<RuleEditorModel> {
 
     public static final String KEY_DEV_RULE_TEXT = "devRule:text";
+    public static final String KEY_DEV_INFO_TEXT = "devRule:text";
 
     private String label;
 
-    public DevRuleModel(RuleEditorModel root, String label) {
+    public DevRuleModel(RuleEditorModel root, int num) {
 	super(root);
-	this.label = label;
+	this.label = "Rule" + num;
     }
 
     public String getLabel() {
