@@ -16,10 +16,13 @@ import javax.swing.JTextArea;
 import de.as.tasmota.rule.helper.controller.DevRuleController;
 import de.as.tasmota.rule.helper.model.DevRuleModel;
 import de.as.tasmota.rule.helper.model.ModelBase.ValueBridge;
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
 
 public class DevRulePanel extends JPanel {
 
     private JTextArea taRule;
+    private JLabel lSettings;
 
     public DevRulePanel(DevRuleController controller) {
 	// this.transformEvent = transformEvent;
@@ -41,7 +44,19 @@ public class DevRulePanel extends JPanel {
 		taRule.setText(value);
 	    }
 	});
-	// NOP
+
+	model.addBridge(DevRuleModel.KEY_DEV_INFO_TEXT, new ValueBridge<String>() {
+
+	    @Override
+	    public String getValue() {
+		return lSettings.getText();
+	    }
+
+	    @Override
+	    public void setValue(String value) {
+		lSettings.setText(value);
+	    }
+	});
     }
 
     public void setText(String text) {
@@ -86,7 +101,7 @@ public class DevRulePanel extends JPanel {
 	pO.add(lName, new GridBagConstraints(0, 0, 1, 1, 0.0, 0.0, GridBagConstraints.WEST,
 		GridBagConstraints.HORIZONTAL, new Insets(3, 7, 3, 7), 0, 0));
 
-	JLabel lSettings = new JLabel("---");
+	lSettings = new JLabel("---");
 	lSettings.setFont(new Font("Tahoma", Font.PLAIN, 11));
 	GridBagConstraints gbc_lSettings = new GridBagConstraints();
 	gbc_lSettings.fill = GridBagConstraints.HORIZONTAL;
@@ -107,6 +122,11 @@ public class DevRulePanel extends JPanel {
 	pLf.setLayout(gbl_pLf);
 
 	JButton button = new JButton(">>");
+	button.addActionListener(new ActionListener() {
+	    public void actionPerformed(ActionEvent e) {
+		controller.actionGetFromEditor();
+	    }
+	});
 	GridBagConstraints gbc_button = new GridBagConstraints();
 	gbc_button.fill = GridBagConstraints.HORIZONTAL;
 	gbc_button.insets = new Insets(3, 3, 3, 3);
@@ -116,6 +136,11 @@ public class DevRulePanel extends JPanel {
 	pLf.add(button, gbc_button);
 
 	JButton button_1 = new JButton("<<");
+	button_1.addActionListener(new ActionListener() {
+	    public void actionPerformed(ActionEvent e) {
+		controller.actionSendToEditor();
+	    }
+	});
 	GridBagConstraints gbc_button_1 = new GridBagConstraints();
 	gbc_button_1.fill = GridBagConstraints.HORIZONTAL;
 	gbc_button_1.insets = new Insets(3, 3, 3, 3);
@@ -124,6 +149,11 @@ public class DevRulePanel extends JPanel {
 	pLf.add(button_1, gbc_button_1);
 
 	JButton btnLd = new JButton("d.load");
+	btnLd.addActionListener(new ActionListener() {
+	    public void actionPerformed(ActionEvent e) {
+		controller.actionDownloadFromDevice();
+	    }
+	});
 	GridBagConstraints gbc_btnLd = new GridBagConstraints();
 	gbc_btnLd.fill = GridBagConstraints.HORIZONTAL;
 	gbc_btnLd.insets = new Insets(3, 3, 3, 3);
@@ -132,6 +162,11 @@ public class DevRulePanel extends JPanel {
 	pLf.add(btnLd, gbc_btnLd);
 
 	JButton btnSd = new JButton("upload");
+	btnSd.addActionListener(new ActionListener() {
+	    public void actionPerformed(ActionEvent e) {
+		controller.actionUploadToDevice();
+	    }
+	});
 	GridBagConstraints gbc_btnSd = new GridBagConstraints();
 	gbc_btnSd.fill = GridBagConstraints.HORIZONTAL;
 	gbc_btnSd.insets = new Insets(3, 3, 3, 3);
