@@ -11,8 +11,8 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JSplitPane;
 
+import de.as.tasmota.backup.TextEvent;
 import de.as.tasmota.rule.helper.controller.RuleEditorController;
-import de.as.tasmota.rule.helper.gui.utils.TextEvent;
 import de.as.tasmota.rule.helper.logic.formatter.RulePacker;
 import de.as.tasmota.rule.helper.logic.formatter.RuleParser;
 import de.as.tasmota.rule.helper.logic.formatter.RuleParser.Part;
@@ -95,7 +95,7 @@ public class TasmotaRuleHelperGui {
 	this.pDevice = new JPanel();
 	this.spMain.setRightComponent(this.pDevice);
 
-	this.ruleEditor = new RuleEditorPanel(controller, new TextEvent() {
+	this.ruleEditor = new RuleEditorPanel(controller/*, new TextEvent() {
 	    @Override
 	    public void textReceived(String text) {
 		RuleScript script = RuleParser.parse(text);
@@ -131,7 +131,7 @@ public class TasmotaRuleHelperGui {
 		rulePanel2.setText(rpacked2.get(0));
 		rulePanel3.setText(rpacked3.get(0));
 	    }
-	});
+	}*/);
 	this.spMain.setLeftComponent(this.ruleEditor);
 	this.spMain.setDividerLocation(600);
 
