@@ -8,4 +8,25 @@ public class DevRuleController extends ControllerBase<DevRuleModel, RuleEditorCo
 	super(model, root);
     }
 
+    public void actionUploadToDevice() {
+	// TODO Auto-generated method stub
+	System.out.println("TODO: action performed: upload");
+    }
+
+    public void actionDownloadFromDevice() {
+	// TODO Auto-generated method stub
+	System.out.println("TODO: action performed: download");
+    }
+
+    public void actionSendToEditor() {
+	// TODO Auto-generated method stub
+	System.out.println("TODO: action performed: sent to editor");
+    }
+
+    public void actionGetFromEditor() {
+	// TODO Auto-generated method stub
+	System.out.println("TODO: action performed: get form editor");
+    }
+
+    
 }
