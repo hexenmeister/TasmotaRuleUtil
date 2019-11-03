@@ -481,7 +481,7 @@ public class RuleParser {
 	    return space + this.start + (this.hasCondition ? " " + this.condition + " " : " ") + commIf + "\r\n"
 		    + this.writeChildrenFormated(this.secuence ? indent : (indent + 1)/* , "\r\n" */)
 		    // + "\r\n"
-		    + (this.secuence ? space + "endif\r\n" + commEn : "") /* + "\r\n" */;
+		    + (this.secuence ? "":space + "endif"+commEn+"\r\n") /* + "\r\n" */;
 	}
 
 	// public String write() {
@@ -595,7 +595,8 @@ public class RuleParser {
 	// String in = "on System#Boot do // comment DO \r\n// Comment line\r\n
 	// \r\nbacklog test X; test2; test3 %value% endon // Comment END \r\non test#X
 	// do var1 1 endon ";
-	String in = "on System#Boot do backlog power off; VAR1 0; VAR2 0; VAR3 99 endon on BH1750#Illuminance do VAR3 %value% endon on Switch1#State do VAR2 %value% endon on Switch1#State>0 do if ((VAR1<11 AND VAR3<10) OR (VAR1>0 AND VAR1<21)) DIMMER 95; VAR1 12; RuleTimer1 60 elseif (VAR1<21) RuleTimer1 60 endif endon on event#setdim do if (%time%>1310 OR %time%<360) DIMMER 40 else DIMMER 80 endif endon on Switch1#State do publish dev/tasmota/fl/motion %value% endon";
+//	String in = "on System#Boot do backlog power off; VAR1 0; VAR2 0; VAR3 99 endon on BH1750#Illuminance do VAR3 %value% endon on Switch1#State do VAR2 %value% endon on Switch1#State>0 do if ((VAR1<11 AND VAR3<10) OR (VAR1>0 AND VAR1<21)) DIMMER 95; VAR1 12; RuleTimer1 60 elseif (VAR1<21) RuleTimer1 60 endif endon on event#setdim do if (%time%>1310 OR %time%<360) DIMMER 40 else DIMMER 80 endif endon on Switch1#State do publish dev/tasmota/fl/motion %value% endon";
+	String in = "on Rules#Timer=1 do\r\nif (VAR2>0) \r\nif (VAR1>0 AND VAR1<21) \r\nRuleTimer1 30\r\nelseif (VAR1<11) \r\npower off;\r\nVAR1 0\r\nelseif (VAR1==11) \r\ndimmer 5;\r\nVAR1 1;\r\nRuleTimer1 20\r\nelseif (VAR1==12) \r\ndimmer 30;\r\nVAR1 1;\r\nRuleTimer1 20\r\nelseif (VAR1>50 AND VAR1<61) \r\npower off;\r\nVAR1 0\r\nendif\r\nendif\r\nendon\r\n";
 	// String in = "[rule1 abc]// CMD RBlock1\r\non System#Boot do // comment DO
 	// \r\n // comment line \r\n \r\nbacklog // comment backlog\r\n mul1 %VAR1%; //
 	// CCC\r\n test X; // comment 1 \r\ntest2; // comment 2\r\n test3 %value% //
