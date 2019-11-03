@@ -148,7 +148,7 @@ public class RuleEditorPanel extends JPanel {
 	pCe.add(label, new GridBagConstraints(0, 0, 1, 1, 1.0, 0.0, GridBagConstraints.WEST,
 		GridBagConstraints.HORIZONTAL, new Insets(3, 7, 5, 7), 0, 0));
 
-	JButton bCompile = new JButton(">>>>");
+	JButton bCompile = new JButton("Pack >>");
 	bCompile.addActionListener(new ActionListener() {
 	    public void actionPerformed(ActionEvent e) {
 //		RulePacker packer = new RulePacker();
