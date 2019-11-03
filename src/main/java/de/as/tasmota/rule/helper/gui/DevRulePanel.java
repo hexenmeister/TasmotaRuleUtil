@@ -93,9 +93,9 @@ public class DevRulePanel extends JPanel {
 	pO.setBorder(BorderFactory.createEtchedBorder());
 	GridBagLayout gbl_pO = new GridBagLayout();
 	gbl_pO.columnWidths = new int[] { 0, 0, 0, 0, 0 };
-	gbl_pO.rowHeights = new int[] { 22, 0 };
+	gbl_pO.rowHeights = new int[] { 22, 22, 0 };
 	gbl_pO.columnWeights = new double[] { 0.0, 0.0, 0.0, 0.0, Double.MIN_VALUE };
-	gbl_pO.rowWeights = new double[] { 0.0, Double.MIN_VALUE };
+	gbl_pO.rowWeights = new double[] { 0.0, 0.0, Double.MIN_VALUE };
 	pO.setLayout(gbl_pO);
 
 	JLabel lName = new JLabel(controller.getModel().getLabel());
@@ -113,6 +113,16 @@ public class DevRulePanel extends JPanel {
 	gbc_lSettings.gridx = 1;
 	gbc_lSettings.gridy = 0;
 	pO.add(lSettings, gbc_lSettings);
+	
+	JLabel label = new JLabel("---");
+	label.setFont(new Font("Tahoma", Font.PLAIN, 11));
+	GridBagConstraints gbc_label = new GridBagConstraints();
+	gbc_label.fill = GridBagConstraints.HORIZONTAL;
+	gbc_label.anchor = GridBagConstraints.WEST;
+	gbc_label.insets = new Insets(3, 7, 3, 7);
+	gbc_label.gridx = 1;
+	gbc_label.gridy = 1;
+	pO.add(label, gbc_label);
 
 	JPanel pLf = new JPanel();
 	add(pLf, BorderLayout.WEST);
@@ -123,21 +133,21 @@ public class DevRulePanel extends JPanel {
 	gbl_pLf.rowWeights = new double[] { 0.0, 0.0, 0.0, 0.0, Double.MIN_VALUE };
 	pLf.setLayout(gbl_pLf);
 
-	JButton button = new JButton(">>");
-	button.addActionListener(new ActionListener() {
+	JButton btnPack = new JButton("pack >");
+	btnPack.addActionListener(new ActionListener() {
 	    public void actionPerformed(ActionEvent e) {
 		controller.actionGetFromEditor();
 	    }
 	});
-	GridBagConstraints gbc_button = new GridBagConstraints();
-	gbc_button.fill = GridBagConstraints.HORIZONTAL;
-	gbc_button.insets = new Insets(3, 3, 3, 3);
-	gbc_button.anchor = GridBagConstraints.NORTH;
-	gbc_button.gridx = 0;
-	gbc_button.gridy = 0;
-	pLf.add(button, gbc_button);
+	GridBagConstraints gbc_btnPack = new GridBagConstraints();
+	gbc_btnPack.fill = GridBagConstraints.HORIZONTAL;
+	gbc_btnPack.insets = new Insets(3, 3, 3, 3);
+	gbc_btnPack.anchor = GridBagConstraints.NORTH;
+	gbc_btnPack.gridx = 0;
+	gbc_btnPack.gridy = 0;
+	pLf.add(btnPack, gbc_btnPack);
 
-	JButton button_1 = new JButton("<<");
+	JButton button_1 = new JButton("< edit");
 	button_1.addActionListener(new ActionListener() {
 	    public void actionPerformed(ActionEvent e) {
 		controller.actionSendToEditor();
