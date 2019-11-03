@@ -18,13 +18,16 @@ public class TasmotaRuleHelperGui {
 //    private RuleEditorController controller;
 
     private JFrame frame;
-    private JSplitPane spMain;
+    private JSplitPane spEditor;
     private JPanel pDevice;
     private RuleEditorPanel ruleEditor;
     private DevRulePanel rulePanel1;
     private DevRulePanel rulePanel2;
     private DevRulePanel rulePanel3;
     private JPanel pTasmotaOptions;
+    private JSplitPane spMain;
+    private JPanel pEditor;
+    private JPanel pTasm;
 //    private JLabel lblTasmota;
 //    private JLabel lblIp;
 //    private JTextField tfUrl;
@@ -62,7 +65,7 @@ public class TasmotaRuleHelperGui {
     }
 
     public void show() {
-	this.frame.setSize(1000, 750);
+	this.frame.setSize(1200, 750);
 	// this.frame.pack();
 	this.frame.setVisible(true);
     }
@@ -82,12 +85,21 @@ public class TasmotaRuleHelperGui {
 	this.frame.setBounds(100, 100, 896, 727);
 	this.frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
+	spMain = new JSplitPane();
+	frame.getContentPane().add(spMain, BorderLayout.CENTER);
+
+	pEditor = new JPanel();
+	spMain.setLeftComponent(pEditor);
+	this.spMain.setDividerLocation(850);
+	this.spMain.setResizeWeight(0.75);
+	pEditor.setLayout(new BorderLayout(0, 0));
+
 	// Main pane
-	this.spMain = new JSplitPane();
-	this.frame.getContentPane().add(this.spMain, BorderLayout.CENTER);
+	this.spEditor = new JSplitPane();
+	pEditor.add(spEditor, BorderLayout.CENTER);
 
 	this.pDevice = new JPanel();
-	this.spMain.setRightComponent(this.pDevice);
+	this.spEditor.setRightComponent(this.pDevice);
 
 	this.ruleEditor = new RuleEditorPanel(
 		controller/*
@@ -111,8 +123,9 @@ public class TasmotaRuleHelperGui {
 			   * rpacked3 = packer.pack(r3); // TODO rulePanel1.setText(rpacked1.get(0));
 			   * rulePanel2.setText(rpacked2.get(0)); rulePanel3.setText(rpacked3.get(0)); } }
 			   */);
-	this.spMain.setLeftComponent(this.ruleEditor);
-	this.spMain.setDividerLocation(600);
+	this.spEditor.setLeftComponent(this.ruleEditor);
+	this.spEditor.setDividerLocation(500);
+	this.spEditor.setResizeWeight(0.75);
 
 	GridBagLayout gbl_pDevice = new GridBagLayout();
 	gbl_pDevice.columnWidths = new int[] { 250, 0 };
@@ -160,6 +173,9 @@ public class TasmotaRuleHelperGui {
 	gbc_spCc3.gridx = 0;
 	gbc_spCc3.gridy = 3;
 	this.pDevice.add(this.rulePanel3, gbc_spCc3);
+
+	pTasm = new JPanel();
+	spMain.setRightComponent(pTasm);
     }
 
 }
