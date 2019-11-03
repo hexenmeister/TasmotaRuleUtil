@@ -2,8 +2,8 @@ package de.as.tasmota.rule.helper.model;
 
 public class DevRuleModel extends ModelBase<RuleEditorModel> {
 
-    public static final String KEY_DEV_RULE_TEXT = "devRule:text";
-    public static final String KEY_DEV_INFO_TEXT = "devRule:text";
+    public static final String KEY_DEV_RULE_TEXT = "devRulePacked:text";
+    public static final String KEY_DEV_INFO_TEXT = "devRuleInfo:text";
 
     private String label;
 
