@@ -6,14 +6,20 @@ public class DevRuleModel extends ModelBase<RuleEditorModel> {
     public static final String KEY_DEV_INFO_TEXT = "devRuleInfo:text";
 
     private String label;
+    private int index;
 
-    public DevRuleModel(RuleEditorModel root, int num) {
+    public DevRuleModel(RuleEditorModel root, int index) {
 	super(root);
-	this.label = "Rule" + num;
+	this.index = index;
+	this.label = "Rule" + index;
     }
 
     public String getLabel() {
 	return label;
+    }
+
+    public int getIndex() {
+	return index;
     }
 
     public String getRuleText() {
