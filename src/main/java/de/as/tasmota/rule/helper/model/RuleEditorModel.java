@@ -1,6 +1,14 @@
 package de.as.tasmota.rule.helper.model;
 
+import de.as.tasmota.rule.helper.eventbus.ValueRegistry;
+
 public class RuleEditorModel extends ModelBase<RuleEditorModel> {
+
+    protected final ValueRegistry<String, String> stringValueBus = ValueRegistry.instance();
+
+    protected ValueRegistry<String, String> getStringRegistry() {
+        return this.stringValueBus;
+    }
 
     public static final String KEY_RULEEDITOR_TEXT = "ruleEditor:text";
 
@@ -10,30 +18,30 @@ public class RuleEditorModel extends ModelBase<RuleEditorModel> {
     private OptionsHttpModel optionsHttpModel = new OptionsHttpModel(this);
 
     public RuleEditorModel() {
-	super(null);
+        super(null);
     }
 
     public DevRuleModel getDevRuleModel1() {
-	return devRuleModel1;
+        return devRuleModel1;
     }
 
     public DevRuleModel getDevRuleModel2() {
-	return devRuleModel2;
+        return devRuleModel2;
     }
 
     public DevRuleModel getDevRuleModel3() {
-	return devRuleModel3;
+        return devRuleModel3;
     }
 
     public OptionsHttpModel getOptionsHttpModel() {
-	return optionsHttpModel;
+        return optionsHttpModel;
     }
 
     public String getEditorText() {
-	return this.getString(KEY_RULEEDITOR_TEXT);
+        return this.getString(KEY_RULEEDITOR_TEXT);
     }
 
     public void setEditorText(String text) {
-	this.setString(KEY_RULEEDITOR_TEXT, text);
+        this.setString(KEY_RULEEDITOR_TEXT, text);
     }
 }

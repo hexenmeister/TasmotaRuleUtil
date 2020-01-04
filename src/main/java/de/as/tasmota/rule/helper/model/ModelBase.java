@@ -1,43 +1,38 @@
 package de.as.tasmota.rule.helper.model;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.function.Consumer;
+import java.util.function.Supplier;
 
-public class ModelBase<M extends ModelBase<?>> {
+import de.as.tasmota.rule.helper.eventbus.Registration;
+import de.as.tasmota.rule.helper.eventbus.ValueRegistry;
+
+public abstract class ModelBase<M extends ModelBase<?>> {
 
     private M root;
 
-    private Map<String, ValueBridge<?>> map = new HashMap<>();
+    protected abstract ValueRegistry<String, String> getStringRegistry();
 
     protected ModelBase(M root) {
-	this.root = root;
+        this.root = root;
     }
 
     @SuppressWarnings("unchecked")
     public M getRoot() {
-	if (this.root == null) {
-	    return (M) this;
-	}
-	return this.root;
+        if (this.root == null) {
+            return (M) this;
+        }
+        return this.root;
     }
 
-    public static abstract class ValueBridge<T> {
-	public abstract T getValue();
-
-	public abstract void setValue(T value);
-    }
-
-    public void addBridge(String key, ValueBridge<?> bridge) {
-	this.map.put(key, bridge);
+    public Registration registerStringBridge(String key, Supplier<String> getter, Consumer<String> setter) {
+        return this.getStringRegistry().register(key, getter, setter);
     }
 
     public String getString(String key) {
-	return (String) this.map.get(key).getValue();
+        return this.getStringRegistry().get(key);
     }
 
-    @SuppressWarnings("unchecked")
     public void setString(String key, String value) {
-	((ValueBridge<String>) this.map.get(key)).setValue(value);
+        this.getStringRegistry().set(key, value);
     }
-
 }

@@ -9,6 +9,9 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.InputEvent;
 import java.awt.event.KeyEvent;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.function.Consumer;
 
 import javax.swing.AbstractAction;
 import javax.swing.Action;
@@ -31,14 +34,26 @@ import javax.swing.undo.CannotUndoException;
 import javax.swing.undo.UndoManager;
 
 import de.as.tasmota.rule.helper.controller.RuleEditorController;
-import de.as.tasmota.rule.helper.model.ModelBase.ValueBridge;
+import de.as.tasmota.rule.helper.eventbus.BusEvent;
+import de.as.tasmota.rule.helper.eventbus.EventRegistry;
+import de.as.tasmota.rule.helper.eventbus.Registration;
 import de.as.tasmota.rule.helper.model.RuleEditorModel;
 
 public class RuleEditorPanel extends JPanel {
 
     private static final long serialVersionUID = 2140071908788902424L;
 
-//    private RuleEditorController controller;
+    private static final EventRegistry<String, BusEvent> EVENT_BUS = EventRegistry.instance();
+
+    public Registration register(String key, Consumer<BusEvent> listener) {
+	return EVENT_BUS.register(key, listener);
+    }
+
+    private List<Registration> registrations = new ArrayList<>();
+
+    public void release() {
+	this.registrations.forEach(Registration::remove);
+    }
 
     private JTextPane taCodeEditor;
 
@@ -49,20 +64,10 @@ public class RuleEditorPanel extends JPanel {
     private RedoAction redoAction = null;
 
     private void initModel(RuleEditorModel model) {
-	model.addBridge(RuleEditorModel.KEY_RULEEDITOR_TEXT, new ValueBridge<String>() {
-
-	    @Override
-	    public String getValue() {
-		return taCodeEditor.getText();
-	    }
-
-	    @Override
-	    public void setValue(String value) {
-		taCodeEditor.setText(value);
-	    }
-	});
+	this.registrations.add(model.registerStringBridge(RuleEditorModel.KEY_RULEEDITOR_TEXT,
+		() -> taCodeEditor.getText(), (v) -> taCodeEditor.setText(v)));
     }
-//
+
 //    /**
 //     * Nur für den WindowBuilder.
 //     */
@@ -110,18 +115,19 @@ public class RuleEditorPanel extends JPanel {
 	    }
 	});
 
-	controller.getModel().addBridge(RuleEditorModel.KEY_RULEEDITOR_TEXT, new ValueBridge<String>() {
-
-	    @Override
-	    public String getValue() {
-		return taCodeEditor.getText();
-	    }
-
-	    @Override
-	    public void setValue(String value) {
-		taCodeEditor.setText(value);
-	    }
-	});
+//	controller.getModel().addBridge(RuleEditorModel.KEY_RULEEDITOR_TEXT, () -> taCodeEditor.getText(), (v) -> taCodeEditor.setText(v));
+//	controller.getModel().addBridge(RuleEditorModel.KEY_RULEEDITOR_TEXT, new ValueBridge<String>() {
+//
+//	    @Override
+//	    public String getValue() {
+//		return taCodeEditor.getText();
+//	    }
+//
+//	    @Override
+//	    public void setValue(String value) {
+//		taCodeEditor.setText(value);
+//	    }
+//	});
     }
 
     private void initialize(RuleEditorController controller) {

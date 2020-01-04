@@ -5,6 +5,11 @@ import java.awt.Font;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.function.Consumer;
 
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
@@ -14,14 +19,31 @@ import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 
 import de.as.tasmota.rule.helper.controller.DevRuleController;
+import de.as.tasmota.rule.helper.eventbus.BusEvent;
+import de.as.tasmota.rule.helper.eventbus.EventRegistry;
+import de.as.tasmota.rule.helper.eventbus.Registration;
 import de.as.tasmota.rule.helper.model.DevRuleModel;
-import de.as.tasmota.rule.helper.model.ModelBase.ValueBridge;
-import java.awt.event.ActionListener;
-import java.awt.event.ActionEvent;
 
 public class DevRulePanel extends JPanel {
 
+    public static final String EVENT_BUTTON_PACK = "DevRulePanel:BtnPack";
+    public static final String EVENT_BUTTON_COPY_TO_EDIT = "DevRulePanel:BtnCopyToEdit";
+    public static final String EVENT_BUTTON_DOWNLOAD = "DevRulePanel:BtnDownload";
+    public static final String EVENT_BUTTON_UPLOAD = "DevRulePanel:BtnUpload";
+
     private static final long serialVersionUID = -3879865029886567323L;
+
+    private static final EventRegistry<String, BusEvent> EVENT_BUS = EventRegistry.instance();
+
+    public Registration register(String key, Consumer<BusEvent> listener) {
+	return EVENT_BUS.register(key, listener);
+    }
+
+    private List<Registration> registrations = new ArrayList<>();
+
+    public void release() {
+	this.registrations.forEach(Registration::remove);
+    }
 
     private JTextArea taRule;
     private JLabel lSettings;
@@ -34,31 +56,10 @@ public class DevRulePanel extends JPanel {
     }
 
     private void initModel(DevRuleModel model) {
-	model.addBridge(DevRuleModel.KEY_DEV_RULE_TEXT, new ValueBridge<String>() {
-
-	    @Override
-	    public String getValue() {
-		return taRule.getText();
-	    }
-
-	    @Override
-	    public void setValue(String value) {
-		taRule.setText(value);
-	    }
-	});
-
-	model.addBridge(DevRuleModel.KEY_DEV_INFO_TEXT, new ValueBridge<String>() {
-
-	    @Override
-	    public String getValue() {
-		return lSettings.getText();
-	    }
-
-	    @Override
-	    public void setValue(String value) {
-		lSettings.setText(value);
-	    }
-	});
+	this.registrations.add(model.registerStringBridge(DevRuleModel.KEY_DEV_RULE_TEXT, () -> taRule.getText(),
+		(v) -> taRule.setText(v)));
+	this.registrations.add(model.registerStringBridge(DevRuleModel.KEY_DEV_INFO_TEXT, () -> lSettings.getText(),
+		(v) -> lSettings.setText(v)));
     }
 
     public void setText(String text) {
@@ -136,6 +137,8 @@ public class DevRulePanel extends JPanel {
 	JButton btnPack = new JButton("pack >");
 	btnPack.addActionListener(new ActionListener() {
 	    public void actionPerformed(ActionEvent e) {
+		// TODO: Umstelliung => EventBus
+		EVENT_BUS.sendEvent(EVENT_BUTTON_PACK, new BusEvent(e.getActionCommand(), e.paramString()));
 		controller.actionGetFromEditor();
 	    }
 	});
@@ -150,6 +153,8 @@ public class DevRulePanel extends JPanel {
 	JButton button_1 = new JButton("< edit");
 	button_1.addActionListener(new ActionListener() {
 	    public void actionPerformed(ActionEvent e) {
+		// TODO: Umstelliung => EventBus
+		EVENT_BUS.sendEvent(EVENT_BUTTON_COPY_TO_EDIT, new BusEvent(e.getActionCommand(), e.paramString()));
 		controller.actionSendToEditor();
 	    }
 	});
@@ -163,6 +168,8 @@ public class DevRulePanel extends JPanel {
 	JButton btnLd = new JButton("d.load");
 	btnLd.addActionListener(new ActionListener() {
 	    public void actionPerformed(ActionEvent e) {
+		// TODO: Umstelliung => EventBus
+		EVENT_BUS.sendEvent(EVENT_BUTTON_DOWNLOAD, new BusEvent(e.getActionCommand(), e.paramString()));
 		controller.actionDownloadFromDevice();
 	    }
 	});
@@ -176,6 +183,8 @@ public class DevRulePanel extends JPanel {
 	JButton btnSd = new JButton("upload");
 	btnSd.addActionListener(new ActionListener() {
 	    public void actionPerformed(ActionEvent e) {
+		// TODO: Umstelliung => EventBus
+		EVENT_BUS.sendEvent(EVENT_BUTTON_UPLOAD, new BusEvent(e.getActionCommand(), e.paramString()));
 		controller.actionUploadToDevice();
 	    }
 	});

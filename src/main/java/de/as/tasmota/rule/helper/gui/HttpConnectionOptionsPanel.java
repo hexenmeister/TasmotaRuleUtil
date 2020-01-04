@@ -4,20 +4,38 @@ import java.awt.Font;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.function.Consumer;
 
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
-import de.as.tasmota.rule.helper.model.ModelBase.ValueBridge;
 import de.as.tasmota.rule.helper.controller.OptionsHttpController;
+import de.as.tasmota.rule.helper.eventbus.BusEvent;
+import de.as.tasmota.rule.helper.eventbus.EventRegistry;
+import de.as.tasmota.rule.helper.eventbus.Registration;
+import de.as.tasmota.rule.helper.model.DevRuleModel;
 import de.as.tasmota.rule.helper.model.OptionsHttpModel;
 
 public class HttpConnectionOptionsPanel extends JPanel {
 
     private static final long serialVersionUID = -5740429526128477409L;
-    
+
+    private static final EventRegistry<String, BusEvent> EVENT_BUS = EventRegistry.instance();
+
+    public Registration register(String key, Consumer<BusEvent> listener) {
+	return EVENT_BUS.register(key, listener);
+    }
+
+    private List<Registration> registrations = new ArrayList<>();
+
+    public void release() {
+	this.registrations.forEach(Registration::remove);
+    }
+
     private JTextField tfUrl;
     private JTextField tfPass;
     private JTextField tfUser;
@@ -31,42 +49,12 @@ public class HttpConnectionOptionsPanel extends JPanel {
     }
 
     private void initModel(OptionsHttpModel model) {
-	model.addBridge(OptionsHttpModel.KEY_OPT_IP, new ValueBridge<String>() {
-
-	    @Override
-	    public String getValue() {
-		return HttpConnectionOptionsPanel.this.tfUrl.getText();
-	    }
-
-	    @Override
-	    public void setValue(String value) {
-		HttpConnectionOptionsPanel.this.tfUrl.setText(value);
-	    }
-	});
-	model.addBridge(OptionsHttpModel.KEY_OPT_PASS, new ValueBridge<String>() {
-
-	    @Override
-	    public String getValue() {
-		return HttpConnectionOptionsPanel.this.tfPass.getText();
-	    }
-
-	    @Override
-	    public void setValue(String value) {
-		HttpConnectionOptionsPanel.this.tfPass.setText(value);
-	    }
-	});
-	model.addBridge(OptionsHttpModel.KEY_OPT_USER, new ValueBridge<String>() {
-
-	    @Override
-	    public String getValue() {
-		return HttpConnectionOptionsPanel.this.tfUser.getText();
-	    }
-
-	    @Override
-	    public void setValue(String value) {
-		HttpConnectionOptionsPanel.this.tfUser.setText(value);
-	    }
-	});
+	this.registrations.add(model.registerStringBridge(OptionsHttpModel.KEY_OPT_IP, () -> tfUrl.getText(),
+		(v) -> tfUrl.setText(v)));
+	this.registrations.add(model.registerStringBridge(OptionsHttpModel.KEY_OPT_PASS, () -> tfPass.getText(),
+		(v) -> tfPass.setText(v)));
+	this.registrations.add(model.registerStringBridge(OptionsHttpModel.KEY_OPT_USER, () -> tfUser.getText(),
+		(v) -> tfUser.setText(v)));
     }
 
     private void initialize(OptionsHttpController controller) {
