@@ -1,4 +1,4 @@
-package de.as.ustils.json;
+package de.as.utils.json;
 
 import java.io.StringReader;
 
