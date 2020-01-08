@@ -78,7 +78,10 @@ public abstract class JsonData {
         }
 
         public JsonData get(int index) {
-            return this.values.get(index);
+            if (index < this.values.size()) {
+                return this.values.get(index);
+            }
+            return null;
         }
 
         @Override
@@ -86,6 +89,7 @@ public abstract class JsonData {
             return this.values.stream().map(x -> x.toString()).collect(Collectors.joining(",", "[", "]"));
         }
     }
+
     public boolean isArray() {
         return false;
     }
@@ -110,7 +114,31 @@ public abstract class JsonData {
         return null;
     }
 
-    public JsonData getPath(String path) {
+    public JsonData getPath(String... path) {
+        if (this.isValue()) {
+            return null;
+        }
+        if (path.length < 1) {
+            return null;
+        }
+        JsonData node = this;
+        int cnt = 0;
+        while (cnt < path.length) {
+            if (node.isObject()) {
+                node = ((JsonObject) node).get(path[cnt]);
+            } else if (node.isArray()) {
+                node = ((JsonArray) node).get(Integer.parseInt(path[cnt]));
+            }
+            if (node == null) {
+                return null;
+            }
+            cnt++;
+        }
+
+        return node;
+    }
+
+    public JsonData getStrPath(String path) {
         // e.g. get("Status.FriendlyName.1");
         if (this.isValue()) {
             return null;
@@ -129,7 +157,7 @@ public abstract class JsonData {
             return null;
         }
         if (ps.length > 1) {
-            return node.getPath(ps[1]);
+            return node.getStrPath(ps[1]);
         }
         return node;
     }
