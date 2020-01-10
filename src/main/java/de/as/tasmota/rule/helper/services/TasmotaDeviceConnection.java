@@ -4,8 +4,11 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 
 import de.as.utils.json.JsonData;
 import de.as.utils.json.JsonParser;
@@ -13,12 +16,32 @@ import de.as.utils.json.JsonParser;
 public class TasmotaDeviceConnection {
 
     public static class CommandResult {
-        private Exception exception;
-        private boolean successful;
-        private boolean unknown;
-        private String errorText;
-//        private String resultText;
-        private JsonData data;
+        public Exception getException() {
+            return this.exception;
+        }
+
+        public boolean isSuccessful() {
+            return this.successful;
+        }
+
+        public boolean isUnknown() {
+            return this.unknown;
+        }
+
+        public String getErrorText() {
+            return this.errorText;
+        }
+
+        public JsonData getData() {
+            return this.data;
+        }
+
+        Exception exception;
+        boolean successful;
+        boolean unknown;
+        String errorText;
+//        String resultText;
+        JsonData data;
     }
 
     public static class InvalideConnectionParametersException extends Exception {
@@ -74,7 +97,7 @@ public class TasmotaDeviceConnection {
     }
 
     private HttpURLConnection createConnection(String cmd) throws IOException {
-        String urlFull = this.params.getUrl() + "cm?cmnd=" + cmd;
+        String urlFull = this.params.getUrl() + "cm?cmnd=" + this.encodeValue(cmd);
         String user = this.params.getUser();
         String pass = this.params.getPass();
         if (!user.trim().isEmpty() && !pass.trim().isEmpty()) {
@@ -83,6 +106,8 @@ public class TasmotaDeviceConnection {
         URL url = new URL(urlFull);
         HttpURLConnection con = (HttpURLConnection) url.openConnection();
         con.setRequestMethod("GET");
+        // Test Connection with HEAD Method and low timeout?
+        con.setConnectTimeout(3000); //set timeout to 5 seconds
         return con;
     }
 
@@ -110,6 +135,14 @@ public class TasmotaDeviceConnection {
             }
         }
         return content.toString();
+    }
+
+    private String encodeValue(String value) {
+        try {
+            return URLEncoder.encode(value, StandardCharsets.UTF_8.toString());
+        } catch (UnsupportedEncodingException ex) {
+            throw new RuntimeException(ex.getCause());
+        }
     }
 
     public String sendReceive(String cmd) throws DeviceAccessException {
@@ -149,9 +182,28 @@ public class TasmotaDeviceConnection {
         JsonData js;
         try {
             js = this.excuteCommandJson(cmd);
-            cr.data = js;
-            // TODO: Check unknown command, warning,..
             cr.successful = true;
+            cr.unknown = false;
+            cr.data = js;
+
+            JsonData jd;
+            // {"WARNING":"Need user=<username>&password=<password>"}
+            jd = js.getPath("WARNING");
+            if (jd != null) {
+                cr.successful = false;
+                cr.errorText = jd.getValue().toString();
+            }
+
+            // {"Command":"Unknown"}
+            jd = js.getPath("Command");
+            if (jd != null && "Unknown".equalsIgnoreCase(jd.getValue().toString())) {
+                cr.successful = false;
+                cr.unknown = true;
+                cr.errorText = "Command unknown";
+            }
+
+            // Weiteres?
+
         } catch (DeviceAccessException e) {
             cr.errorText = e.getMessage();
             cr.exception = e;
