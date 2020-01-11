@@ -1,12 +1,7 @@
 package de.as.tasmota.rule.helper.model;
 
 import de.as.tasmota.rule.helper.eventbus.ValueRegistry;
-import de.as.tasmota.rule.helper.services.DeviceConnectionParameters;
-import de.as.tasmota.rule.helper.services.TasmotaDeviceConnection;
-import de.as.tasmota.rule.helper.services.TasmotaDeviceConnection.CommandResult;
-import de.as.tasmota.rule.helper.services.TasmotaDeviceConnection.DeviceAccessException;
-import de.as.tasmota.rule.helper.services.TasmotaDeviceConnection.InvalideConnectionParametersException;
-import de.as.utils.json.JsonData;
+import de.as.tasmota.rule.helper.services.TasmotaHttpServices;
 
 public class DevRuleModel extends ModelBase<RuleEditorModel> {
 
@@ -54,30 +49,32 @@ public class DevRuleModel extends ModelBase<RuleEditorModel> {
         String urlBase = this.getRoot().getOptionsHttpModel().getOptIp();
         String user = this.getRoot().getOptionsHttpModel().getOptUser();
         String pass = this.getRoot().getOptionsHttpModel().getOptPass();
-        try {
-            TasmotaDeviceConnection tc = new TasmotaDeviceConnection(
-                    new DeviceConnectionParameters(urlBase, user, pass));
-            CommandResult response = tc.excuteCommand("Rule" + this.getIndex());
 
-            if (response.isSuccessful()) {
-                JsonData jd = response.getData().getPath("Rules");
-                if (jd == null) {
-                    this.setRuleText("Problem getting rule text. The answer was " + response.getData());
-                } else {
-                    String ruleText = jd != null ? jd.getValue().toString() : "<empty>";
-                    this.setRuleText(ruleText);
-                }
-            } else {
-                String warning = response.getErrorText();
-                this.setRuleText("Error getting rules:\r\n" + warning);
-            }
-        } catch (InvalideConnectionParametersException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        } catch (DeviceAccessException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        }
+        this.setRuleText(TasmotaHttpServices.getInstance().getTasmotaRuleText(urlBase, user, pass, this.getIndex()));
+//        try {
+//            TasmotaDeviceConnection tc = new TasmotaDeviceConnection(
+//                    new DeviceConnectionParameters(urlBase, user, pass));
+//            CommandResult response = tc.excuteCommand("Rule" + this.getIndex());
+//
+//            if (response.isSuccessful()) {
+//                JsonData jd = response.getData().getPath("Rules");
+//                if (jd == null) {
+//                    this.setRuleText("Problem getting rule text. The answer was " + response.getData());
+//                } else {
+//                    String ruleText = jd != null ? jd.getValue().toString() : "<empty>";
+//                    this.setRuleText(ruleText);
+//                }
+//            } else {
+//                String warning = response.getErrorText();
+//                this.setRuleText("Error getting rules:\r\n" + warning);
+//            }
+//        } catch (InvalideConnectionParametersException e) {
+//            // TODO Auto-generated catch block
+//            e.printStackTrace();
+//        } catch (DeviceAccessException e) {
+//            // TODO Auto-generated catch block
+//            e.printStackTrace();
+//        }
     }
 
     public void actionSendToEditor() {
