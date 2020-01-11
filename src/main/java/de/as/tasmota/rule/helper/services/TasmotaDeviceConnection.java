@@ -107,7 +107,8 @@ public class TasmotaDeviceConnection {
         HttpURLConnection con = (HttpURLConnection) url.openConnection();
         con.setRequestMethod("GET");
         // Test Connection with HEAD Method and low timeout?
-        con.setConnectTimeout(3000); //set timeout to 5 seconds
+        con.setConnectTimeout(this.params.getTimeout()); // set timeout
+        con.setReadTimeout(5000);
         return con;
     }
 
@@ -210,5 +211,21 @@ public class TasmotaDeviceConnection {
         }
 
         return cr;
+    }
+
+    public boolean checkConnection() {
+        try {
+            HttpURLConnection.setFollowRedirects(false);
+            HttpURLConnection con = (HttpURLConnection) new URL(this.params.getUrl()).openConnection();
+            con.setRequestMethod("HEAD");
+
+            con.setConnectTimeout(this.params.getTimeout()); // set timeout
+
+            return (con.getResponseCode() == HttpURLConnection.HTTP_OK);
+//         } catch (java.net.SocketTimeoutException e) {
+//            return false;
+        } catch (java.io.IOException e) {
+            return false;
+        }
     }
 }

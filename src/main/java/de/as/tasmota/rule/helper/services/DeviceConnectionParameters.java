@@ -6,12 +6,18 @@ public class DeviceConnectionParameters {
     private String user;
     private String pass;
     private boolean valide = false;
+    private int timeoutSeconds = 1000;
 
     public DeviceConnectionParameters(String url, String user, String pass) {
+        this(url, user, pass, 1000);
+    }
+
+    public DeviceConnectionParameters(String url, String user, String pass, int timeoutSeconds) {
         super();
         this.url = url;
         this.user = user;
         this.pass = pass;
+        this.timeoutSeconds = timeoutSeconds;
         this.init();
     }
 
@@ -31,7 +37,7 @@ public class DeviceConnectionParameters {
             user = "admin";
         }
         this.valide = true;
-        this.url=urlBase;
+        this.url = urlBase;
         this.user = user;
     }
 
@@ -51,4 +57,7 @@ public class DeviceConnectionParameters {
         return this.valide;
     }
 
+    public int getTimeout() {
+        return this.timeoutSeconds;
+    }
 }
