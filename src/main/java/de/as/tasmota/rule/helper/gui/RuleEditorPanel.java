@@ -11,7 +11,6 @@ import java.awt.event.InputEvent;
 import java.awt.event.KeyEvent;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.function.Consumer;
 
 import javax.swing.AbstractAction;
 import javax.swing.Action;
@@ -33,25 +32,12 @@ import javax.swing.undo.CannotRedoException;
 import javax.swing.undo.CannotUndoException;
 import javax.swing.undo.UndoManager;
 
-import de.as.tasmota.rule.helper.eventbus.BusEvent;
-import de.as.tasmota.rule.helper.eventbus.EventRegistry;
 import de.as.tasmota.rule.helper.eventbus.Registration;
 import de.as.tasmota.rule.helper.model.RuleEditorModel;
 
 public class RuleEditorPanel extends JPanel {
 
     private static final long serialVersionUID = 2140071908788902424L;
-
-    public static final String EVENT_BUTTON_PACK = "RuleEditorPanel:BtnPack";
-    public static final String EVENT_BUTTON_FORMAT = "RuleEditorPanel:BtnFormat";
-    public static final String EVENT_BUTTON_LOAD = "RuleEditorPanel:BtnLoad";
-    public static final String EVENT_BUTTON_SAVE = "RuleEditorPanel:BtnSave";
-
-    private static final EventRegistry<String, BusEvent> EVENT_BUS = EventRegistry.instance();
-
-    public Registration register(String key, Consumer<BusEvent> listener) {
-        return EVENT_BUS.register(key, listener);
-    }
 
     private List<Registration> registrations = new ArrayList<>();
 
@@ -68,8 +54,8 @@ public class RuleEditorPanel extends JPanel {
     private RedoAction redoAction = null;
 
     private void initModel(RuleEditorModel model) {
-        this.registrations.add(model.registerStringBridge(RuleEditorModel.KEY_RULEEDITOR_TEXT, () -> this.taCodeEditor.getText(),
-                (v) -> this.taCodeEditor.setText(v)));
+        this.registrations.add(model.registerStringBridge(RuleEditorModel.KEY_RULEEDITOR_TEXT,
+                () -> this.taCodeEditor.getText(), (v) -> this.taCodeEditor.setText(v)));
     }
 
 //    /**
@@ -163,11 +149,6 @@ public class RuleEditorPanel extends JPanel {
         bCompile.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                // TODO
-                EVENT_BUS.sendEvent(EVENT_BUTTON_PACK, new BusEvent(e.getActionCommand(), e.paramString()));
-//        RulePacker packer = new RulePacker();
-//         String text = taCodeEditor.getText();
-//        transformEvent.textReceived(text);
                 model.actionPackCode();
                 RuleEditorPanel.this.taCodeEditor.requestFocusInWindow();
 //        List<String> rpacked = packer.pack(text);
@@ -183,12 +164,11 @@ public class RuleEditorPanel extends JPanel {
             @Override
             public void actionPerformed(ActionEvent e) {
                 int pos = RuleEditorPanel.this.taCodeEditor.getCaretPosition();
-//        RuleScript script = RuleParser.parse(controller.getModel().getEditorText());
-//        controller.getModel().setEditorText(script.writeFormated() + script.getUnparsedText());
-                // TODO
-                EVENT_BUS.sendEvent(EVENT_BUTTON_FORMAT, new BusEvent(e.getActionCommand(), e.paramString()));
+
                 model.actionFormatCode();
-                RuleEditorPanel.this.taCodeEditor.setCaretPosition(Math.min(pos, RuleEditorPanel.this.taCodeEditor.getCaretPosition()));
+
+                RuleEditorPanel.this.taCodeEditor
+                        .setCaretPosition(Math.min(pos, RuleEditorPanel.this.taCodeEditor.getCaretPosition()));
                 RuleEditorPanel.this.taCodeEditor.requestFocusInWindow();
             }
         });
@@ -203,8 +183,6 @@ public class RuleEditorPanel extends JPanel {
         bLoad.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                // TODO
-                EVENT_BUS.sendEvent(EVENT_BUTTON_LOAD, new BusEvent(e.getActionCommand(), e.paramString()));
                 model.actionLoad();
             }
         });
@@ -218,8 +196,6 @@ public class RuleEditorPanel extends JPanel {
         bSave.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                // TODO
-                EVENT_BUS.sendEvent(EVENT_BUTTON_SAVE, new BusEvent(e.getActionCommand(), e.paramString()));
                 model.actionSave();
 
             }

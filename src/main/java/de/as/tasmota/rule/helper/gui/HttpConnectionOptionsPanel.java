@@ -8,29 +8,18 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.function.Consumer;
 
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
-import de.as.tasmota.rule.helper.eventbus.BusEvent;
-import de.as.tasmota.rule.helper.eventbus.EventRegistry;
 import de.as.tasmota.rule.helper.eventbus.Registration;
 import de.as.tasmota.rule.helper.model.OptionsHttpModel;
 
 public class HttpConnectionOptionsPanel extends JPanel {
 
     private static final long serialVersionUID = -5740429526128477409L;
-
-    public static final String EVENT_BUTTON_TRY = "HttpConnectionOptionsPanel:BtnTry";
-
-    private static final EventRegistry<String, BusEvent> EVENT_BUS = EventRegistry.instance();
-
-    public Registration register(String key, Consumer<BusEvent> listener) {
-        return EVENT_BUS.register(key, listener);
-    }
 
     private List<Registration> registrations = new ArrayList<>();
 
@@ -147,7 +136,7 @@ public class HttpConnectionOptionsPanel extends JPanel {
         btnLoadAll.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                EVENT_BUS.sendEvent(EVENT_BUTTON_TRY, new BusEvent(e.getActionCommand(), e.paramString()));
+                model.actionConnect();
             }
         });
         GridBagConstraints gbc_btnLoadAll = new GridBagConstraints();

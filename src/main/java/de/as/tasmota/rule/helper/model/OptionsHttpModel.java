@@ -6,6 +6,7 @@ public class OptionsHttpModel extends ModelBase<RuleEditorModel> {
 
     protected final ValueRegistry<String, String> stringValueBus = ValueRegistry.instance();
 
+    @Override
     protected ValueRegistry<String, String> getStringRegistry() {
         return this.stringValueBus;
     }
@@ -40,6 +41,11 @@ public class OptionsHttpModel extends ModelBase<RuleEditorModel> {
 
     public void setOptPass(String text) {
         this.setString(KEY_OPT_PASS, text);
+    }
+
+    public void actionConnect() {
+        // TODO
+        System.out.println("actionConnect");
     }
 
 }

@@ -9,7 +9,6 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.function.Consumer;
 
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
@@ -18,25 +17,12 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 
-import de.as.tasmota.rule.helper.eventbus.BusEvent;
-import de.as.tasmota.rule.helper.eventbus.EventRegistry;
 import de.as.tasmota.rule.helper.eventbus.Registration;
 import de.as.tasmota.rule.helper.model.DevRuleModel;
 
 public class DevRulePanel extends JPanel {
 
     private static final long serialVersionUID = -3879865029886567323L;
-
-    public static final String EVENT_BUTTON_PACK = "DevRulePanel:BtnPack";
-    public static final String EVENT_BUTTON_COPY_TO_EDIT = "DevRulePanel:BtnCopyToEdit";
-    public static final String EVENT_BUTTON_DOWNLOAD = "DevRulePanel:BtnDownload";
-    public static final String EVENT_BUTTON_UPLOAD = "DevRulePanel:BtnUpload";
-
-    private static final EventRegistry<String, BusEvent> EVENT_BUS = EventRegistry.instance();
-
-    public Registration register(String key, Consumer<BusEvent> listener) {
-        return EVENT_BUS.register(key, listener);
-    }
 
     private List<Registration> registrations = new ArrayList<>();
 
@@ -137,8 +123,6 @@ public class DevRulePanel extends JPanel {
         btnPack.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                // TODO: Umstelliung => EventBus
-                EVENT_BUS.sendEvent(EVENT_BUTTON_PACK, new BusEvent(e.getActionCommand(), e.paramString()));
                 model.actionGetFromEditor();
             }
         });
@@ -154,8 +138,6 @@ public class DevRulePanel extends JPanel {
         button_1.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                // TODO: Umstelliung => EventBus
-                EVENT_BUS.sendEvent(EVENT_BUTTON_COPY_TO_EDIT, new BusEvent(e.getActionCommand(), e.paramString()));
                 model.actionSendToEditor();
             }
         });
@@ -170,8 +152,6 @@ public class DevRulePanel extends JPanel {
         btnLd.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                // TODO: Umstelliung => EventBus
-                EVENT_BUS.sendEvent(EVENT_BUTTON_DOWNLOAD, new BusEvent(e.getActionCommand(), e.paramString()));
                 model.actionDownloadFromDevice();
             }
         });
@@ -186,8 +166,6 @@ public class DevRulePanel extends JPanel {
         btnSd.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                // TODO: Umstelliung => EventBus
-                EVENT_BUS.sendEvent(EVENT_BUTTON_UPLOAD, new BusEvent(e.getActionCommand(), e.paramString()));
                 model.actionUploadToDevice();
             }
         });
