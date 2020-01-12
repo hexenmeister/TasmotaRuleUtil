@@ -51,30 +51,6 @@ public class DevRuleModel extends ModelBase<RuleEditorModel> {
         String pass = this.getRoot().getOptionsHttpModel().getOptPass();
 
         this.setRuleText(TasmotaHttpServices.getInstance().getTasmotaRuleText(urlBase, user, pass, this.getIndex()));
-//        try {
-//            TasmotaDeviceConnection tc = new TasmotaDeviceConnection(
-//                    new DeviceConnectionParameters(urlBase, user, pass));
-//            CommandResult response = tc.excuteCommand("Rule" + this.getIndex());
-//
-//            if (response.isSuccessful()) {
-//                JsonData jd = response.getData().getPath("Rules");
-//                if (jd == null) {
-//                    this.setRuleText("Problem getting rule text. The answer was " + response.getData());
-//                } else {
-//                    String ruleText = jd != null ? jd.getValue().toString() : "<empty>";
-//                    this.setRuleText(ruleText);
-//                }
-//            } else {
-//                String warning = response.getErrorText();
-//                this.setRuleText("Error getting rules:\r\n" + warning);
-//            }
-//        } catch (InvalideConnectionParametersException e) {
-//            // TODO Auto-generated catch block
-//            e.printStackTrace();
-//        } catch (DeviceAccessException e) {
-//            // TODO Auto-generated catch block
-//            e.printStackTrace();
-//        }
     }
 
     public void actionSendToEditor() {
